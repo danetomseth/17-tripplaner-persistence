@@ -1,0 +1,29 @@
+<html>
+	<head>
+		<script src="https://code.jquery.com/jquery-2.2.0.js"></script>
+	</head>
+	<body>
+		<h2>Welcome to Generic App</h2>
+		<p><a href="/games">View games JSON</a></p>
+		<div>
+			<button id="fetch-them">Fetch and show the games</button>
+			<ul id="list-of-games"></ul>
+		</div>
+	</body>
+	<script>
+	$('#fetch-them').on('click', function () {
+		$.ajax({
+			method: 'GET',
+			url: '/games',
+			success: function (dataFromBackend) {
+				dataFromBackend.forEach(function (gameObj) {
+					$("#list-of-games").append('<li>' + gameObj.name + '</li>');
+				});
+			},
+			error: function (err) {
+				console.error(err);
+			}
+		});
+	});
+	</script>
+</html>
