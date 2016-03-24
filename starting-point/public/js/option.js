@@ -1,23 +1,29 @@
 'use strict';
-/* global $ daysModule attractionsModule hotels restaurants activities */
 
-/**
- * This module fills the `select` tags with `option`s.
- * It runs immediately upon document ready (not called by other modules).
- * Each `option` displays the name of an attraction and is associated
- * with an actual attraction object via jQuery's `data` system.
- * Clicking the "add" button will pass that attraction object to the
- * `daysModule` for addition.
- */
-var dayCount = 1;
+
 $(function(){
 
   var $optionsPanel = $('#options-panel');
 
-  // remember, second param of `forEach` is a `this` binding
-  hotels.forEach(makeOption, $optionsPanel.find('#hotel-choices'));
-  restaurants.forEach(makeOption, $optionsPanel.find('#restaurant-choices'));
-  activities.forEach(makeOption, $optionsPanel.find('#activity-choices'));
+
+  $.get('/api/restaurants', function (restArr) {
+    restArr.forEach(makeOption, $optionsPanel.find('#restaurant-choices'));
+      //restaurants.push(rest.name);
+  })
+  .fail( console.error.bind(console));
+
+   $.get('/api/hotels', function (hotelsArr) {
+    hotelsArr.forEach(makeOption, $optionsPanel.find('#hotel-choices'));
+      //restaurants.push(rest.name);
+  })
+  .fail( console.error.bind(console));
+
+  $.get('/api/activities', function (activitiesArr) {
+    activitiesArr.forEach(makeOption, $optionsPanel.find('#activity-choices'));
+      //restaurants.push(rest.name);
+  })
+  .fail( console.error.bind(console));
+
 
   // make a single `option` tag & associate it with an attraction object
   function makeOption (databaseAttraction) {
