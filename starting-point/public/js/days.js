@@ -45,7 +45,8 @@ var daysModule = (function () {
     $removeButton.on('click', deleteCurrentDay);
   });
 
-  function addDay () {
+  function addDay (day) {
+    console.log('in add day',day);
     if (this && this.blur) this.blur(); // removes focus box from buttons
     var newDay = dayModule.create({ number: days.length + 1 }); // dayModule
     days.push(newDay);
@@ -74,8 +75,15 @@ var daysModule = (function () {
 
   var methods = {
 
-    load: function () {
-      $(addDay);
+//here we want ajax request to load all days
+
+    load: function () {   
+      $.get('/api/days', function(allDays) {
+        allDays.forEach(function(day) {
+            $(addDay(day));
+        });
+    })
+        .fail(console.error.bind(console));
     },
 
     switchTo: switchTo,

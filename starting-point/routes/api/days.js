@@ -34,7 +34,7 @@ router.get('/', function(req, res, next) {
         })
 })
 
-router.get('/clear', function(req, res, next) {
+router.delete('/clear', function(req, res, next) {
     Day.remove({}).exec()
         .then(function(remove) {
             res.json("Removed Days");
@@ -65,53 +65,61 @@ router.post('/', function(req, res, next) {
 
 function getNumberDays() {
     return Day.find({}).exec()
-
 }
 
 
 
-router.post('/:num/hotels/:hotelId', function(req, res, next) {
-    console.log(req.params);
-    var setDay = req.params.num;
+router.post('/:dayNum/hotels/:hotelId', function(req, res, next) {
+    var setDay = req.params.dayNum;
     console.log(setDay);
-
-    // Day.find({
-    // 	number: setDay
-    // }).populate('hotels',{
-    // 	path: 'hotels',
-    // 	select: 'hotel._id'
-    // })
-    // .exec(function (err, day) {
-    // 	console.log(day.hotels)
-    // 	res.json(day.hotels);
-    // })
 	    Day.findOne({
 	    	number: setDay
 	    })
         .then(function(day) {
         	day.hotels = req.params.hotelId
-        	console.log('presave')
-        	console.log('pre',day)
         	return day.save()
         })
         .then(function(updatedDay) {
         	return Day.findById(updatedDay._id).populate('hotels')
-        	// console.log('updated:', updatedDay);
-        	// return updatedDay.populate('hotels')
         }).then(function(populatedDay){
         	console.log('pop:',populatedDay);
         	res.json(populatedDay);
         }).then(null, console.error.bind(console))
+})
 
-    // Day.find({
-    // 	number: setDay
-    // }).populate('hotel restaurants activities').execPopulate().then(function(popDay) {
-    //      // popDay now has objects in place of _id s!
-    //      console.log(popDay);
-    //  });
-
-
-
+router.post('/:dayNum/restaurants/:restId', function(req, res, next) {
+    var setDay = req.params.dayNum;
+    console.log(setDay);
+        Day.findOne({
+            number: setDay
+        })
+        .then(function(day) {
+            day.restaurants = req.params.restId
+            return day.save()
+        })
+        .then(function(updatedDay) {
+            return Day.findById(updatedDay._id).populate('restaurants')
+        }).then(function(populatedDay){
+            console.log('pop:',populatedDay);
+            res.json(populatedDay);
+        }).then(null, console.error.bind(console))
+})
+router.post('/:dayNum/activities/:activityId', function(req, res, next) {
+    var setDay = req.params.dayNum;
+    console.log(setDay);
+        Day.findOne({
+            number: setDay
+        })
+        .then(function(day) {
+            day.activities = req.params.activityId
+            return day.save()
+        })
+        .then(function(updatedDay) {
+            return Day.findById(updatedDay._id).populate('activities')
+        }).then(function(populatedDay){
+            console.log('pop:',populatedDay);
+            res.json(populatedDay);
+        }).then(null, console.error.bind(console))
 })
 
 router.get('/pop', function(req, res, next) {
@@ -121,25 +129,9 @@ router.get('/pop', function(req, res, next) {
     });
 })
 
-// router.post('/:id/activities', function(req, res, next) {
-// 	Day.find({
-// 		activities: req.params.id
-// 	}).exec().then(function(activity) {
-// 		res.json(activity);
-// 	})	
-// })
 
-// router.post('/:id/hotels', function(req, res, next) {
-// 	Day.find({
-// 		hotels: req.params.id
-// 	}).exec().then(function(hotel) {
-// 		res.json(hotel);
-// 	})	
-// })
 
-router.get('/', function(req, res, next) {
-    //res.json(...)
-})
+
 
 
 

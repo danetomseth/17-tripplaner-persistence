@@ -4,6 +4,7 @@ var models = require('../models');
 var Hotel = models.Hotel;
 var Restaurant = models.Restaurant;
 var Activity = models.Activity;
+var Day = models.Day;
 var Promise = require('bluebird');
 
 
@@ -20,18 +21,9 @@ router.use('/api/days', require('./api/days'));
 
 
 router.get('/', function(req, res) {
-  Promise.all([
-    Hotel.find(),
-    Restaurant.find(),
-    Activity.find()
-  ])
-  .spread(function(dbHotels, dbRestaurants, dbActivities) {
-    res.render('index', {
-      templateHotels: dbHotels,
-      templateRestaurants: dbRestaurants,
-      templateActivities: dbActivities
-    });
-  });
+  
+
+    res.render('index');
 });
 
 module.exports = router;
